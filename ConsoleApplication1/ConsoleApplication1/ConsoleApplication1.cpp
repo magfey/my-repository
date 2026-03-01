@@ -84,9 +84,9 @@ public:
 		}
 		for (int i = 0; i < m_size; i++) {
 			for (int j = 0; j < other.m_size; j++) {
-				result.m_value[i + j] = m_value[i] * other.m_value[j];
+				result.m_value[i + j] += m_value[i] * other.m_value[j];
 				if (result.m_value[i + j] > 9) {
-					result.m_value[i + j + 1] = result.m_value[i + j] / 10;
+					result.m_value[i + j + 1] += result.m_value[i + j] / 10;
 					result.m_value[i + j] %= 10;
 				}
 			}
@@ -95,6 +95,11 @@ public:
 			result.m_size--;
 		}
 		return result;
+	}
+
+	BigInt operator*=(const BigInt other) {
+		*this = *this * other;
+		return *this;
 	}
 
 	bool operator<(const BigInt& other) {
@@ -184,21 +189,110 @@ ostream& operator<<(ostream& out, const BigInt& other) {
 
 int main() {
 	setlocale(LC_ALL, "RU");
-	BigInt x("26");
-	BigInt y("8");
-	cout << (x * y) << endl;
-	cout << (x + y) << endl;
-	cout << (x - y) << endl;
-	x += y;
-	cout << x << endl;
-	cout << "введите новый y: ";
+	BigInt x, y;
+	int e;
+	cout << "Введите x: ";
+	cin >> x;
+	if (cin.fail()) {
+		cout << "Введено некорректное значение" << endl;
+		return 1;
+	}
+	cout << "Введите y: ";
 	cin >> y;
-	cout << "\nновый y: " << y << endl;
-	cout << (x * y) << endl;
-	cout << (x + y) << endl;
-	cout << (x - y) << endl;
-	x += y;
-	cout << x << endl;
+	if (cin.fail()) {
+		cout << "Введено некорректное значение" << endl;
+		return 1;
+	}
+	cout << "x = " << x << endl;
+	cout << "y = " << y << endl;
+	do {
+		cout << "1 - сложение, 2 - сложение с присваиванием, 3 - вычитание, 4 - умножение, 5 - умножение с присваиванием, 6 - равенство, 7 - неравенство, 8 - больше, 9 - меньше, 0 - выход: " << endl;
+		cin >> e;
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(10000, '\n');
+			cout << "\nОшибка ввода" << endl;
+			continue;
+		}
+
+		switch (e) {
+		case 1: {
+			cout << "сложение:" << endl;
+			cout << x << " + " << y << " = " << x + y << endl;
+			break;
+		}
+		case 2: {
+			cout << "сложение с присваиванием:" << endl;
+			cout << x << " += " << y << " = " << (x += y) << endl;
+			break;
+		}
+		case 3: {
+			cout << "вычитание:" << endl;
+			cout << x << " - " << y << " = " << x - y << endl;
+			break;
+		}
+		case 4: {
+			cout << "умножение:" << endl;
+			cout << (x) << " * " << y << " = " << x * y << endl;
+			break;
+		}
+		case 5: {
+			cout << "умножение с присваиванием:" << endl;
+			BigInt x_copy = x;
+			cout << x_copy << " *= " << y << " = " << (x *= y) << endl;
+			break;
+		}
+		case 6: {
+			cout << "равенство:" << endl;
+			if (x == y) {
+				cout << x << " равно " << y << endl;
+				break;
+			}
+			else {
+				cout << x << " не равно " << y << endl;
+				break;
+			}
+
+		}
+		case 7: {
+			cout << "неравенство:" << endl;
+			if (x != y) {
+				cout << x << " не равно " << y << endl;
+				break;
+			}
+			else {
+				cout << x << " равно " << y << endl;
+				break;
+			}
+		}
+		case 8: {
+			if (x > y) {
+				cout << x << " больше " << y << endl;
+				break;
+			}
+			else {
+				cout << x << " не больше " << y << endl;
+				break;
+			}
+		}
+		case 9: {
+			if (x < y) {
+				cout << x << " меньше " << y << endl;
+				break;
+			}
+			else {
+				cout << x << " не меньше " << y << endl;
+				break;
+			}
+		}
+		case 0: {
+			cout << "выход" << endl;
+			break;
+		}
+		}
+
+	} while (e != 0);
+
 
 	return 0;
 }

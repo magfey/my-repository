@@ -1,0 +1,4 @@
+﻿  ConsoleApplication1.cpp
+E:\C_yazblk\my-repository\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(26,14): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+E:\C_yazblk\my-repository\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(29,12): warning C4267: =: преобразование из "size_t" в "short"; возможна потеря данных
+  ConsoleApplication1.vcxproj -> E:\C_yazblk\my-repository\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe
