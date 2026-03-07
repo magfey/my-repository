@@ -1,0 +1,8 @@
+[
+{
+  "directory": "D:/c/my-repository/lab0/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\COMMUN~1\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -MDd /FoCMakeFiles\\lab6.dir\\main.cpp.obj /FdCMakeFiles\\lab6.dir\\ /FS -c D:\\c\\my-repository\\lab0\\main.cpp",
+  "file": "D:/c/my-repository/lab0/main.cpp",
+  "output": "D:/c/my-repository/lab0/build/CMakeFiles/lab6.dir/main.cpp.obj"
+}
+]

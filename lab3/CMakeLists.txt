@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-set(PROJECT_NAME lab6)
+set(PROJECT_NAME lab0)
 project("${PROJECT_NAME}")
 
 set(CMAKE_CXX_STANDART 20)

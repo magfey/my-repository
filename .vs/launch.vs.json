@@ -1,0 +1,12 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "lab3.1\\CMakeLists.txt",
+      "projectTarget": "lab3.1.exe",
+      "name": "lab3.1.exe"
+    }
+  ]
+}
