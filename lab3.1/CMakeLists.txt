@@ -4,7 +4,7 @@ project("${PROJECT_NAME}")
 
 set(CMAKE_CXX_STANDART 20)
 
-add_executable("${PROJECT_NAME}" main.cpp f.hpp f.cpp)
+add_executable("${PROJECT_NAME}" main.cpp)
 
 add_library(my_lib STATIC src/my_lib.cpp)
 

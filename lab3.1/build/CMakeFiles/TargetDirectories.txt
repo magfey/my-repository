@@ -1,0 +1,4 @@
+D:/c/my-repository/lab3.1/build/CMakeFiles/lab3.1.dir
+D:/c/my-repository/lab3.1/build/CMakeFiles/my_lib.dir
+D:/c/my-repository/lab3.1/build/CMakeFiles/edit_cache.dir
+D:/c/my-repository/lab3.1/build/CMakeFiles/rebuild_cache.dir

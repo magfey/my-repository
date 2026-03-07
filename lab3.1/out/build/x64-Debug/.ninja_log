@@ -1,5 +1,0 @@
-# ninja log v6
-14	576	7945913424051644	CMakeFiles/lab3.1.dir/main.cpp.obj	6af42cfb56c84a78
-9	589	7945913424051644	CMakeFiles/my_lib.dir/src/my_lib.cpp.obj	4e4caf0b73b9bc4c
-19	714	7945913424210017	CMakeFiles/lab3.1.dir/f.cpp.obj	809be5007fc75d42
-589	879	7945913429922582	my_lib.lib	cd8c57767bc3fcef
