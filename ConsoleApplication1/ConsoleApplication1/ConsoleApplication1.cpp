@@ -2,188 +2,256 @@
 #include <string>
 using namespace std;
 
-
 class BigInt {
 	char m_value[1000];
-	short m_size = 0;
+	short m_size;
+	bool m_negative;
+
+	void NoZeros() {
+		while (m_size > 1 && m_value[m_size - 1] == 0)
+			--m_size;
+		if (m_size == 1 && m_value[0] == 0)
+			m_negative = false;
+	}
 
 public:
-	BigInt() {
-		for (int i = 0; i < 1000; i++) {
-			m_value[i] = 0;
-		}
-		m_size = 1;
+	BigInt() : m_size(1), m_negative(false) {
+		for (int i = 0; i < 1000; ++i) m_value[i] = 0;
+		m_value[0] = 0;
 	}
 
-	~BigInt() {
-
-	}
-
-	BigInt(const string& value) {
-		size_t len = value.length();
-		for (int i = 0; i < len; i++)
-			m_value[i] = value[len - i - 1] - '0';
-		for (int i = len; i < 1000; i++) {
-			m_value[i] = 0;
+	BigInt(const string& s) {
+		for (int i = 0; i < 1000; ++i) m_value[i] = 0;
+		m_negative = false;
+		size_t start = 0;
+		if (s[0] == '-') {
+			m_negative = true;
+			start = 1;
 		}
-		m_size = len;
+		while (start < s.size() && s[start] == '0') ++start;
+		if (start == s.size()) {
+			m_size = 1;
+			m_value[0] = 0;
+			m_negative = false;
+			return;
+		}
+		m_size = s.size() - start;
+		for (size_t i = 0; i < m_size; ++i)
+			m_value[i] = s[s.size() - 1 - i] - '0';
 	}
 
 	BigInt(const BigInt& other) {
-		for (int i = 0; i < 1000; i++) {
-			m_value[i] = other.m_value[i];
-		}
+		for (int i = 0; i < 1000; ++i) m_value[i] = other.m_value[i];
 		m_size = other.m_size;
+		m_negative = other.m_negative;
+	}
+
+	BigInt& operator=(const BigInt& other) {
+		if (this != &other) {
+			for (int i = 0; i < 1000; ++i) m_value[i] = other.m_value[i];
+			m_size = other.m_size;
+			m_negative = other.m_negative;
+		}
+		return *this;
+	}
+
+	BigInt operator-() const {
+		BigInt res = *this;
+		if (!(res.m_size == 1 && res.m_value[0] == 0))
+			res.m_negative = !res.m_negative;
+		return res;
 	}
 
 	BigInt& operator+=(const BigInt& other) {
-		for (int i = 0; i < m_size; i++) {
-			m_value[i] += other.m_value[i];
-			if (m_value[i] > 9) {
-				m_value[i] -= 10;
-				m_value[i + 1]++;
-				if (i + 1 == m_size) {
-					m_size++;
+		if (m_negative == other.m_negative) {
+			int carry = 0;
+			int maxSize;
+			if (m_size > other.m_size)
+				maxSize = m_size;
+			else
+				maxSize = other.m_size;
+			for (int i = 0; i < maxSize; ++i) {
+				int sum = m_value[i] + other.m_value[i] + carry;
+				m_value[i] = sum % 10;
+				carry = sum / 10;
+			}
+			if (carry) {
+				m_value[maxSize] = carry;
+				++maxSize;
+			}
+			m_size = maxSize;
+		}
+		else {
+			bool Plus = false;
+			if (m_size != other.m_size) {
+				if (m_size > other.m_size)
+					Plus = true;
+				else
+					Plus = false;
+			}
+			else {
+				for (int i = m_size - 1; i >= 0; --i) {
+					if (m_value[i] != other.m_value[i]) {
+						if (m_value[i] > other.m_value[i])
+							Plus = true;
+						else
+							Plus = false;
+						break;
+					}
 				}
 			}
+
+			if (Plus) {
+				int t = 0;
+				for (int i = 0; i < m_size; ++i) {
+					int dif = m_value[i] - t - (i < other.m_size ? other.m_value[i] : 0);
+					if (dif < 0) {
+						dif += 10;
+						t = 1;
+					}
+					else {
+						t = 0;
+					}
+					m_value[i] = dif;
+				}
+				NoZeros();
+			}
+			else {
+				int t = 0;
+				int newSize = other.m_size;
+				char tmp[1000] = { 0 };
+				for (int i = 0; i < other.m_size; ++i) {
+					int dif = other.m_value[i] - t - (i < m_size ? m_value[i] : 0);
+					if (dif < 0) {
+						dif += 10;
+						t = 1;
+					}
+					else {
+						t = 0;
+					}
+					tmp[i] = dif;
+				}
+				while (newSize > 1 && tmp[newSize - 1] == 0) --newSize;
+				for (int i = 0; i < newSize; ++i) m_value[i] = tmp[i];
+				m_size = newSize;
+				m_negative = other.m_negative;
+			}
 		}
+		if (m_size == 1 && m_value[0] == 0) m_negative = false;
 		return *this;
 	}
 
-	BigInt operator+(const BigInt& other) {
-		BigInt result(*this);
-		result += other;
-		return result;
+	BigInt operator+(const BigInt& other) const {
+		BigInt res = *this;
+		res += other;
+		return res;
 	}
 
 	BigInt& operator-=(const BigInt& other) {
-		for (int i = 0; i < m_size; i++) {
-			m_value[i] -= other.m_value[i];
-			if (m_value[i] < 0) {
-				m_value[i] += 10;
-				m_value[i + 1]--;
-			}
-		}
-		while (m_size > 1 && m_value[m_size - 1] == 0) {
-			m_size--;
-		}
+		*this += (-other);
 		return *this;
 	}
 
-	BigInt operator-(const BigInt& other) {
-		BigInt result(*this);
-		result -= other;
-		return result;
+	BigInt operator-(const BigInt& other) const {
+		BigInt res = *this;
+		res -= other;
+		return res;
 	}
 
-	BigInt operator*(const BigInt& other) {
-		BigInt result;
-		result.m_size = m_size + other.m_size;
-		for (int i = 0; i < result.m_size; i++) {
-			result.m_value[i] = 0;
-		}
-		for (int i = 0; i < m_size; i++) {
-			for (int j = 0; j < other.m_size; j++) {
-				result.m_value[i + j] += m_value[i] * other.m_value[j];
-				if (result.m_value[i + j] > 9) {
-					result.m_value[i + j + 1] += result.m_value[i + j] / 10;
-					result.m_value[i + j] %= 10;
-				}
+	BigInt operator*(const BigInt& other) const {
+		BigInt res;
+		res.m_size = m_size + other.m_size;
+		for (int i = 0; i < res.m_size; ++i) res.m_value[i] = 0;
+
+		for (int i = 0; i < m_size; ++i) {
+			int carry = 0;
+			for (int j = 0; j < other.m_size; ++j) {
+				int temp = res.m_value[i + j] + m_value[i] * other.m_value[j] + carry;
+				res.m_value[i + j] = temp % 10;
+				carry = temp / 10;
+			}
+			if (carry) {
+				res.m_value[i + other.m_size] += carry;
 			}
 		}
-		while (result.m_size > 1 && result.m_value[result.m_size - 1] == 0) {
-			result.m_size--;
-		}
-		return result;
+		res.NoZeros();
+		if (m_negative != other.m_negative)
+			res.m_negative = true;
+		else
+			res.m_negative = false;
+		if (res.m_size == 1 && res.m_value[0] == 0) res.m_negative = false;
+		return res;
 	}
 
-	BigInt operator*=(const BigInt other) {
+	BigInt& operator*=(const BigInt& other) {
 		*this = *this * other;
 		return *this;
 	}
 
-	bool operator<(const BigInt& other) {
-		if (m_size < other.m_size) {
-			return true;
+	bool operator<(const BigInt& other) const {
+		if (m_negative != other.m_negative) {
+			if (m_negative) return true;
+			else return false;
 		}
-		if (m_size > other.m_size) {
+		if (!m_negative) {
+			if (m_size != other.m_size) {
+				if (m_size < other.m_size) return true;
+				else return false;
+			}
+			for (int i = m_size - 1; i >= 0; --i) {
+				if (m_value[i] != other.m_value[i]) {
+					if (m_value[i] < other.m_value[i]) return true;
+					else return false;
+				}
+			}
 			return false;
 		}
-		for (int i = m_size - 1; i >= 0; i--) {
-			if (m_value[i] < other.m_value[i]) {
-				return true;
+		else {
+			if (m_size != other.m_size) {
+				if (m_size > other.m_size) return true;
+				else return false;
 			}
-			if (m_value[i] > other.m_value[i]) {
-				return false;
+			for (int i = m_size - 1; i >= 0; --i) {
+				if (m_value[i] != other.m_value[i]) {
+					if (m_value[i] > other.m_value[i]) return true;
+					else return false;
+				}
 			}
+			return false;
 		}
-		return false;
 	}
 
-	bool operator>(const BigInt& other) {
-		if (m_size > other.m_size) {
-			return true;
-		}
-		if (m_size < other.m_size) {
-			return false;
-		}
-		for (int i = m_size - 1; i >= 0; i--) {
-			if (m_value[i] > other.m_value[i]) {
-				return true;
-			}
-			if (m_value[i] < other.m_value[i]) {
-				return false;
-			}
-		}
-		return false;
+	bool operator>(const BigInt& other) const {
+		return other < *this;
 	}
 
-	bool operator==(const BigInt& other) {
-		if (m_size != other.m_size) {
-			return false;
-		}
-		for (int i = m_size - 1; i >= 0; i--) {
-			if (m_value[i] != other.m_value[i]) {
-				return false;
-			}
-		}
+	bool operator==(const BigInt& other) const {
+		if (m_negative != other.m_negative) return false;
+		if (m_size != other.m_size) return false;
+		for (int i = 0; i < m_size; ++i)
+			if (m_value[i] != other.m_value[i]) return false;
 		return true;
 	}
 
-	bool operator!=(const BigInt& other) {
-		if (m_size != other.m_size) {
-			return true;
-		}
-		for (int i = m_size - 1; i >= 0; i--) {
-			if (m_value[i] != other.m_value[i]) {
-				return true;
-			}
-		}
-		return false;
+	bool operator!=(const BigInt& other) const {
+		return !(*this == other);
 	}
 
-	void Print() {
-		for (int i = 0; i < m_size; i++) {
-			std::cout << static_cast<short>(m_value[m_size - i - 1]);
-		}
-	}
-
-	friend ostream& operator<<(ostream& out, const BigInt& other);
-
-	friend istream& operator>>(istream& in, BigInt& other);
+	friend ostream& operator<<(ostream& out, const BigInt& a);
+	friend istream& operator>>(istream& in, BigInt& a);
 };
 
-istream& operator>>(istream& in, BigInt& other) {
+istream& operator>>(istream& in, BigInt& a) {
 	string s;
 	in >> s;
-	other = BigInt(s);
+	a = BigInt(s);
 	return in;
 }
 
-ostream& operator<<(ostream& out, const BigInt& other) {
-	for (int i = 0; i < other.m_size; i++) {
-		out << static_cast<short>(other.m_value[other.m_size - i - 1]);
-	}
+ostream& operator<<(ostream& out, const BigInt& a) {
+	if (a.m_negative) out << '-';
+	for (int i = a.m_size - 1; i >= 0; --i)
+		out << static_cast<short>(a.m_value[i]);
 	return out;
 }
 
@@ -193,106 +261,40 @@ int main() {
 	int e;
 	cout << "Введите x: ";
 	cin >> x;
-	if (cin.fail()) {
-		cout << "Введено некорректное значение" << endl;
-		return 1;
-	}
 	cout << "Введите y: ";
 	cin >> y;
-	if (cin.fail()) {
-		cout << "Введено некорректное значение" << endl;
-		return 1;
-	}
-	cout << "x = " << x << endl;
-	cout << "y = " << y << endl;
+	cout << "x = " << x << "\ny = " << y << endl;
+
 	do {
-		cout << "1 - сложение, 2 - сложение с присваиванием, 3 - вычитание, 4 - умножение, 5 - умножение с присваиванием, 6 - равенство, 7 - неравенство, 8 - больше, 9 - меньше, 0 - выход: " << endl;
+		cout << "1 - сложение, 2 - сложение с присваиванием, 3 - вычитание, 4 - умножение, 5 - умножение с присваиванием, 6 - равенство, 7 - неравенство, 8 - больше, 9 - меньше, 0 - выход: ";
 		cin >> e;
 		if (cin.fail()) {
 			cin.clear();
 			cin.ignore(10000, '\n');
-			cout << "\nОшибка ввода" << endl;
+			cout << "Ошибка ввода\n";
 			continue;
 		}
-
 		switch (e) {
-		case 1: {
-			cout << "сложение:" << endl;
-			cout << x << " + " << y << " = " << x + y << endl;
-			break;
-		}
+		case 1: cout << x << " + " << y << " = " << x + y << endl; break;
 		case 2: {
-			cout << "сложение с присваиванием:" << endl;
-			cout << x << " += " << y << " = " << (x += y) << endl;
+			BigInt old = x;
+			cout << old << " += " << y << " = " << (x += y) << endl;
 			break;
 		}
-		case 3: {
-			cout << "вычитание:" << endl;
-			cout << x << " - " << y << " = " << x - y << endl;
-			break;
-		}
-		case 4: {
-			cout << "умножение:" << endl;
-			cout << (x) << " * " << y << " = " << x * y << endl;
-			break;
-		}
+		case 3: cout << x << " - " << y << " = " << x - y << endl; break;
+		case 4: cout << x << " * " << y << " = " << x * y << endl; break;
 		case 5: {
-			cout << "умножение с присваиванием:" << endl;
-			BigInt x_copy = x;
-			cout << x_copy << " *= " << y << " = " << (x *= y) << endl;
+			BigInt old = x;
+			cout << old << " *= " << y << " = " << (x *= y) << endl;
 			break;
 		}
-		case 6: {
-			cout << "равенство:" << endl;
-			if (x == y) {
-				cout << x << " равно " << y << endl;
-				break;
-			}
-			else {
-				cout << x << " не равно " << y << endl;
-				break;
-			}
-
+		case 6: cout << x << (x == y ? " равно " : " не равно ") << y << endl; break;
+		case 7: cout << x << (x != y ? " не равно " : " равно ") << y << endl; break;
+		case 8: cout << x << (x > y ? " больше " : " не больше ") << y << endl; break;
+		case 9: cout << x << (x < y ? " меньше " : " не меньше ") << y << endl; break;
+		case 0: cout << "выход\n"; break;
 		}
-		case 7: {
-			cout << "неравенство:" << endl;
-			if (x != y) {
-				cout << x << " не равно " << y << endl;
-				break;
-			}
-			else {
-				cout << x << " равно " << y << endl;
-				break;
-			}
-		}
-		case 8: {
-			if (x > y) {
-				cout << x << " больше " << y << endl;
-				break;
-			}
-			else {
-				cout << x << " не больше " << y << endl;
-				break;
-			}
-		}
-		case 9: {
-			if (x < y) {
-				cout << x << " меньше " << y << endl;
-				break;
-			}
-			else {
-				cout << x << " не меньше " << y << endl;
-				break;
-			}
-		}
-		case 0: {
-			cout << "выход" << endl;
-			break;
-		}
-		}
-
 	} while (e != 0);
-
 
 	return 0;
 }
