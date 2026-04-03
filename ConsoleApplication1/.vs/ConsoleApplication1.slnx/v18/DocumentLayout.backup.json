@@ -5,6 +5,9 @@
     {
       "AbsoluteMoniker": "D:0:0:{DEA6509A-E486-4BB3-9D68-F6FC80719BBD}|ConsoleApplication1\\ConsoleApplication1.vcxproj|E:\\C_yazblk\\my-repository\\ConsoleApplication1\\ConsoleApplication1\\ConsoleApplication1.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{DEA6509A-E486-4BB3-9D68-F6FC80719BBD}|ConsoleApplication1\\ConsoleApplication1.vcxproj|solutionrelative:ConsoleApplication1\\ConsoleApplication1.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Allozzavr\\source\\repos\\CMakeProject1\\CMakeProject1\\CMakeProject1.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,17 +17,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CMakeProject1.cpp",
+              "DocumentMoniker": "C:\\Users\\Allozzavr\\source\\repos\\CMakeProject1\\CMakeProject1\\CMakeProject1.cpp",
+              "ToolTip": "C:\\Users\\Allozzavr\\source\\repos\\CMakeProject1\\CMakeProject1\\CMakeProject1.cpp",
+              "ViewState": "AgIAALoAAAAAAAAAAAAswPYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-03-15T00:25:30.738Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "ConsoleApplication1.cpp",
               "DocumentMoniker": "E:\\C_yazblk\\my-repository\\ConsoleApplication1\\ConsoleApplication1\\ConsoleApplication1.cpp",
               "RelativeDocumentMoniker": "ConsoleApplication1\\ConsoleApplication1.cpp",
-              "ToolTip": "E:\\C_yazblk\\my-repository\\ConsoleApplication1\\ConsoleApplication1\\ConsoleApplication1.cpp*",
-              "RelativeToolTip": "ConsoleApplication1\\ConsoleApplication1.cpp*",
-              "ViewState": "AgIAAPUAAAAAAAAAAAAswB4BAAADAAAAAAAAAA==",
+              "ToolTip": "E:\\C_yazblk\\my-repository\\ConsoleApplication1\\ConsoleApplication1\\ConsoleApplication1.cpp",
+              "RelativeToolTip": "ConsoleApplication1\\ConsoleApplication1.cpp",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAAGQAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-02-28T17:54:01.613Z",
               "EditorCaption": ""
