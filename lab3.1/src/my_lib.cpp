@@ -42,7 +42,9 @@ using namespace std;
   }
 
   
-  int Student::getCourse() const { return course_; }
+  int Student::getCourse() const { 
+    return course_;
+  }
 
   void Student::nextCourse() {
     if (course_ < 5) {
